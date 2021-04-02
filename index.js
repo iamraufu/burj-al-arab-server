@@ -28,11 +28,14 @@ client.connect(err => {
             })
         console.log(newBooking)
     })
+
+    app.get('/bookings', (req, res) => {
+        //   console.log(req.query.email)
+        bookings.find({ email: req.query.email })
+            .toArray((error, documents) => {
+                res.send(documents)
+            })
+    })
 });
-
-
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
 
 app.listen(port)
