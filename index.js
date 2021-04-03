@@ -4,16 +4,16 @@ const cors = require('cors');
 const admin = require('firebase-admin');
 const port = 5000
 
-var serviceAccount = require("./burj-al-arab-raufu-firebase-adminsdk-cwafk-ea88430cac.json");
+require('dotenv').config()
+
+const serviceAccount = require("./burj-al-arab-raufu-firebase-adminsdk-cwafk-ea88430cac.json");
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@raufuprezensinc.hztjo.mongodb.net/burjAlArab?retryWrites=true&w=majority`;
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
 
-const password = 'iXYS6zJhx$8PUCp'
-
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://alarab:iXYS6zJhx$8PUCp@raufuprezensinc.hztjo.mongodb.net/burjAlArab?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
