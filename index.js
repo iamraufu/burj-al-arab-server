@@ -54,12 +54,17 @@ client.connect(err => {
 
                         bookings.find({ email: queryEmail })
                             .toArray((error, documents) => {
-                                res.send(documents)
+                                res.status(200).send(documents)
                             })
+                    } else {
+                        res.status(401).send('Unauthorized Access!')
                     }
                 })
-
-            .catch((error) => {});
+                .catch((error) => {
+                    res.status(401).send('Unauthorized Access!')
+                });
+        } else {
+            res.status(401).send('Unauthorized Access!')
         }
     })
 });
