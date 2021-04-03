@@ -1,8 +1,14 @@
 const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
+const admin = require('firebase-admin');
 const port = 5000
+
+var serviceAccount = require("./burj-al-arab-raufu-firebase-adminsdk-cwafk-ea88430cac.json");
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
 
 const password = 'iXYS6zJhx$8PUCp'
 
@@ -30,11 +36,31 @@ client.connect(err => {
     })
 
     app.get('/bookings', (req, res) => {
-        //   console.log(req.query.email)
-        bookings.find({ email: req.query.email })
-            .toArray((error, documents) => {
-                res.send(documents)
-            })
+        const bearer = req.headers.authorization
+
+        if (bearer && bearer.startsWith('Bearer ')) {
+            const idToken = bearer.split(' ')[1];
+
+            console.log({ idToken })
+
+            admin.auth().verifyIdToken(idToken)
+                .then((decodedToken) => {
+
+                    const tokenEmail = decodedToken.email;
+
+                    const queryEmail = req.query.email;
+
+                    if (tokenEmail === queryEmail) {
+
+                        bookings.find({ email: queryEmail })
+                            .toArray((error, documents) => {
+                                res.send(documents)
+                            })
+                    }
+                })
+
+            .catch((error) => {});
+        }
     })
 });
 
